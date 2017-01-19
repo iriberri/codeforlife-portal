@@ -293,6 +293,7 @@ a[class^='button']:visited {
 
   @include _border-radius(8px, 8px, 0px, 0px);
   background: $color-background-secondary;
+  border: 1px solid $color-text-tertiary;
   border-radius: .8rem;
   color: $color-text-tertiary;
 
