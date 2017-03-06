@@ -34,46 +34,24 @@
 # copyright notice and these terms. You must not misrepresent the origins of this
 # program; modified versions of the program must be marked as such and not
 # identified as the original program.
-from datetime import timedelta
+import re
 
-from django.utils import timezone
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse_lazy
-from django.contrib import messages as messages
+from django.core import mail
+from django_selenium_clean import selenium
+from selenium.webdriver.support.wait import WebDriverWait
 
-from portal.models import EmailVerification
-
-
-def verify_email_new(request, token):
-    verifications = EmailVerification.objects.filter(token=token)
-
-    if has_verification_failed(verifications):
-        return render(request, 'redesign/email_verification_failed_new.html')
-
-    verification = verifications[0]
-
-    verification.verified = True
-    verification.save()
-
-    user = verification.user
-
-    if verification.email:  # verifying change of email address
-        user.email = verification.email
-        user.save()
-
-        user.email_verifications.exclude(email=user.email).delete()
-
-    messages.success(request, 'Your email address was successfully verified, please log in.')
-
-    if hasattr(user.userprofile, 'student'):
-        return HttpResponseRedirect(reverse_lazy('play'))
-    if hasattr(user.userprofile, 'teacher'):
-        return HttpResponseRedirect(reverse_lazy('onboarding-organisation'))
-
-    # default to homepage if something goes wrong
-    return HttpResponseRedirect(reverse_lazy('home_new'))
+from base_test_new import BaseTest
+from utils.student_new import create_independent_student, submit_independent_student_signup_form
+from utils.messages import is_email_verified_message_showing
 
 
-def has_verification_failed(verifications):
-    return len(verifications) != 1 or verifications[0].verified or (verifications[0].expiry - timezone.now()) < timedelta()
+class TestIndependentStudent(BaseTest):
+    def test_signup(self):
+        page = self.go_to_homepage()
+        page, _, _, _, _ = create_independent_student(page)
+        assert is_email_verified_message_showing(selenium)
+
+    def test_failed_signup(self):
+        page = self.go_to_homepage()
+        page = submit_independent_student_signup_form(page, password='test')
+        assert page.has_independent_student_signup_failed()

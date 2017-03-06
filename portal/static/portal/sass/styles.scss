@@ -46,6 +46,7 @@ $color-background-secondary: #fff;
 $color-background-tertiary: $color-text-grey;
 $color-background-teach: $color-teacher-blue;
 $color-background-play: $color-student-orange;
+$color-background-play-indep: #ff637d;
 $color-background-warning: #fab300;
 $color-background-positive: #7ed321;
 $color-background-tint-primary: #d6e7ed;
@@ -755,6 +756,10 @@ form {
 
 .form--register--student {
   background-color: $color-background-play;
+}
+
+.form--register--indep-student {
+  background-color: $color-background-play-indep;
 }
 
 .form__choice {
