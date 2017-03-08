@@ -35,6 +35,7 @@ $color-background-secondary: #fff;
 $color-background-tertiary: #4a4a4a;
 $color-background-teach: #0c52a3;
 $color-background-play: #f37300;
+$color-background-danger: #f00;
 $color-background-play-indep: #ff637d;
 $color-background-warning: #fab300;
 $color-background-positive: #7ed321;
@@ -236,7 +237,8 @@ a[class^='button']:visited {
   @include _padding(15px, 20px, 15px, 20px);
 }
 
-.button--regular {
+.button--regular,
+.ui-dialog-buttonset button {
   @include _font-size(20px);
   @include _line-height(25px);
 }
@@ -323,7 +325,8 @@ a[class^='button']:visited {
   color: $color-text-secondary;
 }
 
-.button--primary--danger {
+.button--primary--danger,
+.ui-dialog-buttonset button {
   background: $color-button-primary-action-danger;
   color: $color-text-secondary;
 }
@@ -1228,6 +1231,48 @@ td {
   .button--secondary--background-light {
     color: $color-background-play;
   }
+}
+
+.ui-dialog-titlebar {
+  @include _padding(10px, 10px, 10px, 10px);
+  background: $color-background-danger !important;
+}
+
+.ui-dialog-title {
+  @include _font-size(30px);
+  color: $color-text-secondary !important;
+  font-weight: 800 !important;
+}
+
+.ui-dialog-titlebar-close {
+  float: right !important;
+}
+
+.ui-dialog {
+  background: $color-background-secondary;
+  left: 35% !important;
+  position: fixed !important;
+  top: 30% !important;
+  width: 30% !important;
+}
+
+.ui-dialog-buttonpane {
+  @include _padding(10px, 10px, 10px, 10px);
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.ui-dialog-buttonset button {
+  @include _margin(0px, 10px, 0px, 10px);
+}
+
+.ui-dialog-content {
+  @include _padding(10px, 10px, 10px, 10px);
+}
+
+.ui-widget-overlay {
+  background: #666666 50% 50% repeat !important;
+  opacity: .8 !important;
 }
 
 @media (min-width: 1400px) {
