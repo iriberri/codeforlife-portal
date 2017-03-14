@@ -43,6 +43,7 @@ from teach_base_page_new import TeachBasePage
 import dashboard_page_new
 import class_settings_page_new
 import edit_student_page
+import move_students_page_new
 
 
 class TeachClassPage(TeachBasePage):
@@ -75,6 +76,16 @@ class TeachClassPage(TeachBasePage):
 
     def reset_passwords(self):
         self.browser.find_element_by_id('resetSelectedStudents').click()
+        return self
+
+    def move_students(self):
+        self.browser.find_element_by_id('moveSelectedStudents').click()
+
+        return move_students_page_new.TeachMoveStudentsPage(self.browser)
+
+    def move_students_none_selected(self):
+        self.browser.find_element_by_id('moveSelectedStudents').click()
+
         return self
 
     def cancel_dialog(self):
@@ -126,5 +137,9 @@ class TeachClassPage(TeachBasePage):
     def go_to_edit_student_page(self):
         self.browser.find_element_by_id("edit_student_button").click()
         return edit_student_page.EditStudentPage(self.browser)
+
+    def go_to_dashboard(self):
+        self.browser.find_element_by_id("return_to_classes_button").click()
+        return dashboard_page_new.TeachDashboardPage(self.browser)
 
 import onboarding_student_list_page
