@@ -450,7 +450,7 @@ class TeacherDismissStudentsForm(forms.Form):
     orig_name = forms.CharField(
         label='Original Name',
         widget=forms.TextInput(
-            attrs={'readonly': 'readonly', 'placeholder': 'Original Name', 'type': 'hidden'}))
+            attrs={'readonly': 'readonly', 'placeholder': 'Original Name', 'style': 'background-color: lightgray; margin: 0; border: 0'}))
     name = forms.CharField(
         label='New Name',
         widget=forms.TextInput(attrs={'placeholder': 'New Name', 'style': 'margin : 0px'}))

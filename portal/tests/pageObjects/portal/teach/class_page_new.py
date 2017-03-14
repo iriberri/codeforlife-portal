@@ -44,6 +44,7 @@ import dashboard_page_new
 import class_settings_page_new
 import edit_student_page
 import move_students_page_new
+import dismiss_students_page_new
 
 
 class TeachClassPage(TeachBasePage):
@@ -87,6 +88,11 @@ class TeachClassPage(TeachBasePage):
         self.browser.find_element_by_id('moveSelectedStudents').click()
 
         return self
+
+    def dismiss_students(self):
+        self.browser.find_element_by_id('dismissSelectedStudents').click()
+
+        return dismiss_students_page_new.TeachDismissStudentsPage(self.browser)
 
     def cancel_dialog(self):
         self.browser.find_element_by_xpath(

@@ -41,6 +41,11 @@ $(function() {
         return false;
 	});
 
+    $('#dismissSelectedStudents').click(function() {
+        postSelectedStudents(DISMISS_STUDENTS_URL);
+        return false;
+    });
+
     // Link to open the dialog
     $("#deleteSelectedStudents").click(function() {
         runIfStudentsSelected(function() {
