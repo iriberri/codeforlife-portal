@@ -42,6 +42,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from teach_base_page_new import TeachBasePage
 import dashboard_page_new
 import class_settings_page_new
+import edit_student_page
 
 
 class TeachClassPage(TeachBasePage):
@@ -99,5 +100,9 @@ class TeachClassPage(TeachBasePage):
     def go_to_class_settings_page(self):
         self.browser.find_element_by_id('class_settings_button').click()
         return class_settings_page_new.TeachClassSettingsPage(self.browser)
+
+    def go_to_edit_student_page(self):
+        self.browser.find_element_by_id("edit_student_button").click()
+        return edit_student_page.EditStudentPage(self.browser)
 
 import onboarding_student_list_page
