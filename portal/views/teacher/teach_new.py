@@ -318,6 +318,84 @@ def process_edit_class_form(request, klass, form):
 
 @login_required(login_url=reverse_lazy('login_new'))
 @user_passes_test(logged_in_as_teacher, login_url=reverse_lazy('login_new'))
+def teacher_edit_student_new(request, pk):
+    student = get_object_or_404(Student, id=pk)
+
+    check_if_authorised(request, student)
+
+    name_form = TeacherEditStudentForm(student, initial={
+        'name': student.new_user.first_name
+    })
+
+    password_form = TeacherSetStudentPass()
+
+    if request.method == 'POST':
+        if 'update_details' in request.POST:
+            name_form = TeacherEditStudentForm(student, request.POST)
+            if name_form.is_valid():
+                name = name_form.cleaned_data['name']
+                student.new_user.first_name = name
+                student.new_user.save()
+                student.save()
+
+                messages.success(request, "The student's details have been changed successfully.")
+
+        else:
+            password_form = TeacherSetStudentPass(request.POST)
+            if password_form.is_valid():
+                return process_reset_password_form(request, student, password_form)
+
+    return render(request, 'redesign/teach_new/teacher_edit_student_new.html', {
+        'name_form': name_form,
+        'password_form': password_form,
+        'student': student,
+        'class': student.class_field,
+    })
+
+
+def process_reset_password_form(request, student, password_form):
+    # check not default value for CharField
+    new_password = password_form.cleaned_data['password']
+    if new_password != '':
+        student.new_user.set_password(new_password)
+        student.new_user.save()
+        name_pass = [{'name': student.new_user.first_name, 'password': new_password}]
+        return render(request, 'redesign/teach_new/teacher_student_reset_new.html',
+                      {'student': student,
+                       'class': student.class_field,
+                       'password': new_password,
+                       'query_data': json.dumps(name_pass)})
+
+
+def check_if_authorised(request, student):
+    # check user is authorised to edit student
+    if request.user.new_teacher != student.class_field.teacher:
+        raise Http404
+
+
+@login_required(login_url=reverse_lazy('login_new'))
+@user_passes_test(logged_in_as_teacher, login_url=reverse_lazy('login_new'))
+def teacher_student_reset_new(request, pk):
+    student = get_object_or_404(Student, id=pk)
+
+    # check user is authorised to edit student
+    if request.user.new_teacher != student.class_field.teacher:
+        raise Http404
+
+    new_password = generate_password(6)
+    student.new_user.set_password(new_password)
+    student.new_user.save()
+    name_pass = [{'name': student.new_user.first_name, 'password': new_password}]
+
+    return render(request, 'redesign/teach_new/teacher_student_reset_new.html',
+                  {'student': student,
+                   'class': student.class_field,
+                   'password': new_password,
+                   'query_data': json.dumps(name_pass)})
+
+
+@login_required(login_url=reverse_lazy('login_new'))
+@user_passes_test(logged_in_as_teacher, login_url=reverse_lazy('login_new'))
 def teacher_move_class_new(request, access_code):
     klass = get_object_or_404(Class, access_code=access_code)
     teachers = Teacher.objects.filter(school=klass.teacher.school).exclude(user=klass.teacher.user)
